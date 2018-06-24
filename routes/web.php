@@ -1,4 +1,8 @@
 <?php
+
+#use Doctrine\DBAL\Schema\Schema;
+#use Illuminate\Database\Schema\Blueprint;
+
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +23,17 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('kye',function() {
     return view('kye');
 });
+
+Route::get('db',function() {
+    Schema::table('users', function ($table) {
+        $table->string('username')->unique()->after('name');
+        #$table->dropColumn('phone');
+    });
+});
+
+//========CHECK ACCOUNT USING AJAX================
+
+Route::post('check-ajax', 'AccountController@loginAjax');
 
 
 

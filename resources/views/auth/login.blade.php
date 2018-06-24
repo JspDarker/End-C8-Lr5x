@@ -8,15 +8,15 @@
                 <div class="panel-heading">Login</div>
 
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+                    <form class="form-horizontal" id="user-login" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-
+                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
+                                <b id="email-error" class="text-danger"></b>
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -29,7 +29,7 @@
                             <label for="password" class="col-md-4 control-label">Password</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
+                                <input id="password" type="password" class="form-control" name="password">
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -66,4 +66,33 @@
         </div>
     </div>
 </div>
+
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        $(function() {
+            let $email = $('#email');
+
+            $email.on('blur',function() {
+                $.ajax({
+                    url:'check-ajax',
+                    type:'post',
+                    data: {
+                        'email': $email.val(),
+                        '_token': $('input[name="_token"]').val()
+                    },
+                    success: function(res) {
+                        $('#email-error').text(res);
+
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+
+
+                });
+            });
+
+        });
+    </script>
 @endsection
